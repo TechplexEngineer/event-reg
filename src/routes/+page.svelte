@@ -1,7 +1,12 @@
-<script>
-	import Counter from './Counter.svelte';
-	import welcome from '$lib/images/svelte-welcome.webp';
-	import welcome_fallback from '$lib/images/svelte-welcome.png';
+<script lang="ts">
+	let events = [
+		{
+			name: 'New England Robotics Derby',
+			dateStr: 'October 12, 2024',
+			eventSlug: 'nerd24', // often the same as eventCode but can be entered before the eventCode is assgined
+			program: 'FRC'
+		}
+	];
 </script>
 
 <svelte:head>
@@ -10,50 +15,25 @@
 </svelte:head>
 
 <section>
-	<h1>
-		<span class="welcome">
-			<picture>
-				<source srcset={welcome} type="image/webp" />
-				<img src={welcome_fallback} alt="Welcome" />
-			</picture>
-		</span>
+	<h1 class="mb-4">Welcome to Event Registration</h1>
 
-		to your new<br />SvelteKit app
-	</h1>
-
-	<h2>
-		try editing <strong>src/routes/+page.svelte</strong>
-	</h2>
-
-	<Counter />
+	<h3>Upcomming Events</h3>
+	{#each events as event}
+		<div class="card">
+			<div class="card-body">
+				<h5 class="card-title">{event.name}</h5>
+				<h6 class="card-subtitle mb-2 text-body-secondary">{event.dateStr}</h6>
+				<!-- <p class="card-text">
+					Some quick example text to build on the card title and make up the bulk of the card's
+					content.
+				</p> -->
+				<a href="event/{event.eventSlug}" class="card-link">Team List</a>
+				<a href="event/{event.eventSlug}/register" class="card-link">Register</a>
+				<a href="event/{event.eventSlug}/volunteer" class="card-link">Volunteer</a>
+			</div>
+		</div>
+	{/each}
 </section>
 
 <style>
-	section {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 0.6;
-	}
-
-	h1 {
-		width: 100%;
-	}
-
-	.welcome {
-		display: block;
-		position: relative;
-		width: 100%;
-		height: 0;
-		padding: 0 0 calc(100% * 495 / 2048) 0;
-	}
-
-	.welcome img {
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		top: 0;
-		display: block;
-	}
 </style>

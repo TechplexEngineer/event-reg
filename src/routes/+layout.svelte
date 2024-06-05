@@ -25,14 +25,8 @@
 		<slot></slot>
 	</main>
 
-	<footer>
-		<p>visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to learn SvelteKit</p>
-	</footer>
+	<footer>&copy; Techplex Labs</footer>
 </div>
-
-<slot></slot>
-
-<slot></slot>
 
 <style>
 	.app {
