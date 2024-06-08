@@ -1,7 +1,11 @@
+<script context="module" lang="ts">
+	export type tableColumns = (string | { data: string; title: string; render?: renderFn })[];
+	export type renderFn = (val: any, type: any, row: any) => string;
+</script>
+
 <script lang="ts">
 	export let data: Record<string, string>[];
-	export let columns: (string | { data: string; title: string })[] = Object.keys(data[0]);
-	console.log('data', data);
+	export let columns: tableColumns = Object.keys(data[0]);
 </script>
 
 <table class="table table-striped">
@@ -21,7 +25,11 @@
 			<tr>
 				{#each columns as colCfg}
 					{#if typeof colCfg === 'object'}
-						<td>{row[colCfg.data]}</td>
+						{#if colCfg.render}
+							<td>{colCfg.render(row[colCfg.data], null, row)}</td>
+						{:else}
+							<td>{row[colCfg.data]}</td>
+						{/if}
 					{:else}
 						<td>{row[colCfg]}</td>
 					{/if}

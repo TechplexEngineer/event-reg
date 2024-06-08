@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
     render,
     screen
@@ -62,5 +62,21 @@ describe('TableForObjectArray', () => {
         expect(
             screen.queryByText('25')
         ).toBeNull();
+    });
+
+    it('supports custom render function, three args, val, type and row ', () => {
+
+        const renderFn = vi.fn(() => "")
+
+        const columns = [
+            { data: 'name', title: 'Age', render: renderFn },
+        ];
+        render(TableForObjectArray, { data: sampleData, columns: columns });
+        expect(
+            renderFn
+        ).toBeCalledTimes(1);
+        expect(
+            renderFn
+        ).toBeCalledWith('Alice', null, sampleData[0]);
     });
 });

@@ -1,11 +1,19 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import TableForObjectArray from '$lib/TableForObjectArray.svelte';
+	import TableForObjectArray, { type tableColumns } from '$lib/TableForObjectArray.svelte';
 
-	const columns = [
-		'name',
-		'type',
-		'number',
+	const columns: tableColumns = [
+		{
+			data: 'name',
+			title: 'Name'
+		},
+		{
+			data: 'number',
+			title: 'Number',
+			render: (val, _, row) => {
+				return `${row.type} ${val}`; //JSON.stringify(row);
+			}
+		},
 		{
 			data: 'location',
 			title: 'Location'
