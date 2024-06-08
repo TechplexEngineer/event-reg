@@ -1,6 +1,16 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import TableForObjectArray from '$lib/TableForObjectArray.svelte';
+
+	const columns = [
+		'name',
+		'type',
+		'number',
+		{
+			data: 'location',
+			title: 'Location'
+		}
+	];
 </script>
 
 <div class="d-flex">
@@ -13,4 +23,4 @@
 
 <h2>Teams</h2>
 
-<TableForObjectArray data={$page.data.teams} />
+<TableForObjectArray data={$page.data.teams} {columns} />

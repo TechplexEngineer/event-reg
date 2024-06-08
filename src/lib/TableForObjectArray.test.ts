@@ -20,13 +20,47 @@ describe('TableForObjectArray', () => {
         ).toBeVisible();
     });
 
-    it('renders columns with explicit list', () => {
-        render(TableForObjectArray, { data: sampleData, columns: ["name"] });
+    it('renders columns with custom title', () => {
+        const columns = [
+            { data: 'name', title: 'Name' },
+            { data: 'age', title: 'Age' },
+        ];
+        render(TableForObjectArray, { data: sampleData, columns: columns });
+        expect(
+            screen.queryByText('Name')
+        ).toBeVisible();
+        expect(
+            screen.queryByText('Age')
+        ).toBeVisible();
+    });
+
+    it('renders columns with custom title and without custom title', () => {
+        const columns = [
+            'name',
+            { data: 'age', title: 'Age' },
+        ];
+        render(TableForObjectArray, { data: sampleData, columns: columns });
         expect(
             screen.queryByText('name')
         ).toBeVisible();
         expect(
-            screen.queryByText('age')
+            screen.queryByText('Age')
+        ).toBeVisible();
+    });
+
+    it('uses the data property to determine what to render', () => {
+        const columns = [
+            { data: 'name', title: 'Age' },
+        ];
+        render(TableForObjectArray, { data: sampleData, columns: columns });
+        expect(
+            screen.queryByText('Age')
+        ).toBeVisible();
+        expect(
+            screen.queryByText('Alice')
+        ).toBeVisible();
+        expect(
+            screen.queryByText('25')
         ).toBeNull();
     });
 });
