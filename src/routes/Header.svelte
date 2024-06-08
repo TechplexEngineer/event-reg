@@ -40,6 +40,23 @@
 					<a class="nav-link" href="#">About</a>
 				</li> -->
 			</ul>
+			<ul class="navbar-nav mb-2 mb-lg-0">
+				<li class="nav-item">
+					<a
+						class="nav-link {$page.url.pathname === '/' ? 'active' : ''}"
+						aria-current="page"
+						href="/">Admin</a
+					>
+				</li>
+				<li class="nav-item">
+					<a
+						class="nav-link {$page.url.pathname === '/' ? 'active' : ''}"
+						aria-current="page"
+						href="/">Dashboard</a
+					>
+				</li>
+			</ul>
+
 			<form class="d-flex">
 				{#if $page.data.session}
 					<a class="btn btn-info" on:click={signOut}>Sign Out</a>
