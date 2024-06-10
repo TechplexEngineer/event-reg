@@ -5,7 +5,7 @@
 
 <script lang="ts">
 	export let data: Record<string, string>[];
-	export let columns: tableColumns = Object.keys(data[0]);
+	export let columns: tableColumns = Object.keys(data[0] || { 'No Data': '' });
 </script>
 
 <table class="table table-striped">
@@ -34,6 +34,10 @@
 						<td>{row[colCfg]}</td>
 					{/if}
 				{/each}
+			</tr>
+		{:else}
+			<tr>
+				<td colspan={columns.length}>No data to display</td>
 			</tr>
 		{/each}
 	</tbody>

@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest';
-import { getEventBySlug } from './data';
+import { getEventBySlug } from './events.server';
 
 describe('getEventBySlug', async (test) => {
     const event = await getEventBySlug('nerd24');

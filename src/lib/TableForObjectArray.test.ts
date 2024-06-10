@@ -79,4 +79,11 @@ describe('TableForObjectArray', () => {
             renderFn
         ).toBeCalledWith('Alice', null, sampleData[0]);
     });
+
+    it('Renders message about having no data if none is supplied', () => {
+        render(TableForObjectArray, { data: [] });
+        expect(
+            screen.getByText('No data to display')
+        ).toBeVisible();
+    });
 });
