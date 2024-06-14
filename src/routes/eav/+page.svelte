@@ -14,13 +14,21 @@
 <h1>EAV Schema Creator</h1>
 
 <div class="row">
-	<div class="col"></div>
 	<div class="col">
 		<Card title="Add Namespace">
-			<FormControl name="type" type="select" items={namespaceTypes} />
-			<FormControl name="name" type="text" />
+			<!-- <FormControl name="type" type="select" items={namespaceTypes} /> -->
+			<FormControl name="name" type="text" class="mt-2" />
+			<FormControl name="Comment" type="text" class="mt-2" />
 
-			<a href="#" class="btn btn-primary">Add</a>
+			<button type="submit" class="btn btn-primary mt-2">Add</button>
+		</Card>
+		<Card title="Namespaces" class="mt-2">
+			<ul>
+				{#each data.namespaces as namespace}
+					<li>{namespace.name}</li>
+				{/each}
+			</ul>
 		</Card>
 	</div>
+	<div class="col"></div>
 </div>

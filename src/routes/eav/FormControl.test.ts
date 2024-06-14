@@ -87,4 +87,14 @@ describe('FormControl', () => {
             document.querySelector('input')!.getAttribute('type')
         ).toBe('email');
     });
+
+    it('allows class attr to be the same as classes:fg', () => {
+        render(FormControl, {
+            name: "name", 'class': "fgClass"
+        });
+
+        expect(
+            screen.queryByLabelText('Name')?.parentElement
+        ).toHaveClass('fgClass', { exact: true });
+    });
 });

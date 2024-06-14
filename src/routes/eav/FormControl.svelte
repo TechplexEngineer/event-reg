@@ -40,10 +40,13 @@
 	export let type: HTMLInputType = 'text';
 	export let items: ({ value: string; label: string } | string)[] = [];
 
+	let className = '';
+	export { className as class };
+
 	const id = 'fg_' + counter++;
 </script>
 
-<div class={classes.fg?.join(' ')}>
+<div class={[...(classes.fg ?? [])].join(' ')}>
 	<label for={id} class={`form-label ${classes.label ? classes.label?.join(' ') : ''}`}
 		>{label}</label
 	>
