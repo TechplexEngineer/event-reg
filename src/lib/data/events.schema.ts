@@ -1,7 +1,26 @@
 import { customType, integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core';
 import type { InferInsertModel, InferModel, InferSelectModel } from "drizzle-orm";
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { z } from 'zod';
+import SimpleSchema from "simpl-schema";
+import { message } from 'sveltekit-superforms';
 
+export const EventDataSchema = new SimpleSchema({
+    name: { type: String },
+    eventSlug: { type: String },
+    date: { type: Date },
+    location: { type: Object },
+    'location.address1': { type: String },
+    'location.address2': { type: String },
+    'location.city': { type: String },
+    'location.state': { type: String },
+    message: { type: String },
+
+    contact: { type: Object },
+    'contact.email': { type: String },
+    eventWebsite: { type: String },
+    teamLimit: { type: Number },
+});
 
 interface EventData {
 
@@ -47,18 +66,19 @@ interface EventData {
     // }
 }
 
-// A project relates onshape documents with a trello board and access permissions
-export const eventTable = sqliteTable('projects', {
-    id: integer('id').primaryKey(),
-    name: text('slug').notNull().unique(),
-    data: text('data', { mode: 'json' }).notNull().$type<EventData>(), //json data
-});
-export type EventResultModel = InferSelectModel<typeof eventTable>;
-export type EventInsertModel = InferInsertModel<typeof eventTable>;
+// export const EventSchema = z.Infer<typeof EventData>
 
-export const eventInsertSchema = createInsertSchema(eventTable);
-export const eventSelectSchema = createSelectSchema(eventTable);
+// export const eventTable = sqliteTable('projects', {
+//     id: integer('id').primaryKey(),
+//     name: text('slug').notNull().unique(),
+//     data: text('data', { mode: 'json' }).notNull().$type<EventData>(), //json data
+// });
+// export type EventResultModel = InferSelectModel<typeof eventTable>;
+// export type EventInsertModel = InferInsertModel<typeof eventTable>;
 
-console.log(JSON.stringify(eventInsertSchema, null, 2))
+// export const eventInsertSchema = createInsertSchema(eventTable);
+// export const eventSelectSchema = createSelectSchema(eventTable);
+
+// console.log(JSON.stringify(eventInsertSchema, null, 2))
 
 

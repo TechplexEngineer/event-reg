@@ -51,6 +51,7 @@
 	"dependencies": {
 		"@auth/sveltekit": "^1.2.0",
 		"drizzle-zod": "^0.5.1",
+		"simpl-schema": "^3.4.6",
 		"svelte-markdown": "^0.4.1",
 		"svelte-select": "^5.8.3"
 	}
