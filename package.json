@@ -50,6 +50,8 @@
 	"type": "module",
 	"dependencies": {
 		"@auth/sveltekit": "^1.2.0",
+		"@miniflare/d1": "^2.14.2",
+		"better-sqlite3": "^11.0.0",
 		"drizzle-zod": "^0.5.1",
 		"simpl-schema": "^3.4.6",
 		"svelte-markdown": "^0.4.1",
