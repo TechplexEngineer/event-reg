@@ -97,4 +97,20 @@ describe('FormControl', () => {
             screen.queryByLabelText('Name')?.parentElement
         ).toHaveClass('fgClass', { exact: true });
     });
+
+    it('supports boolean required property for text inputs', () => {
+        render(FormControl, { name: "name", required: true });
+
+        expect(
+            document.querySelector('input')!.getAttribute('required')
+        ).toBe('');
+    });
+
+    it('supports boolean required property for select inputs', () => {
+        render(FormControl, { name: "name", required: true, type: "select", items: ["1", "2"] });
+        screen.debug();
+        expect(
+            document.querySelector('select')!.getAttribute('required')
+        ).toBe('');
+    });
 });

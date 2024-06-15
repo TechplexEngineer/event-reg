@@ -40,6 +40,8 @@
 	export let type: HTMLInputType = 'text';
 	export let items: ({ value: string; label: string } | string)[] = [];
 
+	export let required: boolean = false;
+
 	let className = '';
 	export { className as class };
 
@@ -51,12 +53,19 @@
 		>{label}</label
 	>
 	{#if type === 'select'}
-		<Select {name} {id} {items} class={`${classes.input ? classes.input?.join(' ') : ''}`} />
+		<Select
+			{name}
+			{id}
+			{items}
+			{required}
+			class={`${classes.input ? classes.input?.join(' ') : ''}`}
+		/>
 	{:else}
 		<input
 			{type}
 			{name}
 			class={`form-control ${classes.input ? classes.input?.join(' ') : ''}`}
+			{required}
 			{id}
 		/>
 	{/if}

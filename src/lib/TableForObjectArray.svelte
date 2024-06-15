@@ -6,32 +6,33 @@
 <script lang="ts">
 	export let data: Record<string, string>[];
 	export let columns: tableColumns = Object.keys(data[0] || { 'No Data': '' });
+	const cols2Render = columns.map((k) => {
+		if (typeof k === 'string') {
+			return {
+				data: k,
+				title: k.charAt(0).toUpperCase() + k.slice(1)
+			};
+		}
+		return k;
+	});
 </script>
 
 <table class="table table-striped">
 	<thead>
 		<tr>
-			{#each columns as obj}
-				{#if typeof obj === 'object'}
-					<th>{obj.title}</th>
-				{:else}
-					<th>{obj}</th>
-				{/if}
+			{#each cols2Render as obj}
+				<th>{obj.title}</th>
 			{/each}
 		</tr>
 	</thead>
 	<tbody>
 		{#each data as row}
 			<tr>
-				{#each columns as colCfg}
-					{#if typeof colCfg === 'object'}
-						{#if colCfg.render}
-							<td>{colCfg.render(row[colCfg.data], null, row)}</td>
-						{:else}
-							<td>{row[colCfg.data]}</td>
-						{/if}
+				{#each cols2Render as colCfg}
+					{#if colCfg.render}
+						<td>{colCfg.render(row[colCfg.data], null, row)}</td>
 					{:else}
-						<td>{row[colCfg]}</td>
+						<td>{row[colCfg.data]}</td>
 					{/if}
 				{/each}
 			</tr>

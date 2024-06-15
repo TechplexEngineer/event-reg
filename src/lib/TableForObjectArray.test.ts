@@ -12,11 +12,12 @@ const sampleData = [
 describe('TableForObjectArray', () => {
     it('renders columns without explicit list', () => {
         render(TableForObjectArray, { data: sampleData });
+        // screen.debug();
         expect(
-            screen.queryByText('name')
+            screen.queryByText('Name')
         ).toBeVisible();
         expect(
-            screen.queryByText('age')
+            screen.queryByText('Age')
         ).toBeVisible();
     });
 
@@ -37,14 +38,14 @@ describe('TableForObjectArray', () => {
     it('renders columns with custom title and without custom title', () => {
         const columns = [
             'name',
-            { data: 'age', title: 'Age' },
+            { data: 'age', title: 'User Age' },
         ];
         render(TableForObjectArray, { data: sampleData, columns: columns });
         expect(
-            screen.queryByText('name')
+            screen.queryByText('Name')
         ).toBeVisible();
         expect(
-            screen.queryByText('Age')
+            screen.queryByText('User Age')
         ).toBeVisible();
     });
 
@@ -65,7 +66,6 @@ describe('TableForObjectArray', () => {
     });
 
     it('supports custom render function, three args, val, type and row ', () => {
-
         const renderFn = vi.fn(() => "")
 
         const columns = [
@@ -85,5 +85,22 @@ describe('TableForObjectArray', () => {
         expect(
             screen.getByText('No data to display')
         ).toBeVisible();
+    });
+
+    it('capitalizes column headings when columns are not passed in', () => {
+        render(TableForObjectArray, { data: sampleData });
+        // screen.debug();
+        expect(
+            screen.queryByText('Name')
+        ).toBeVisible();
+        expect(
+            screen.queryByText('Age')
+        ).toBeVisible();
+    });
+
+    it('renders data', () => {
+        render(TableForObjectArray, { data: sampleData });
+        // screen.debug();
+        expect(document.querySelector("tbody tr td")?.textContent).toBe(sampleData[0].name)
     });
 });
