@@ -1,5 +1,5 @@
 
-let events = [
+const events = [
     {
         name: 'New England Robotics Derby',
         dateStr: 'October 12, 2024',
@@ -16,6 +16,10 @@ Be sure to pay by the deadline as we have teams on the waitlist!`,
         teamLimit: 32
     }
 ];
+
+export const getEvents = () => {
+    return events;
+}
 
 export const getEventBySlug = async (slug: string) => {
     return events.find(event => event.eventSlug === slug);

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { click } from '$lib/superform/onClickKeyPress.action';
 	import { signIn, signOut } from '@auth/sveltekit/client';
 
 	let isAdmin = ['techplex.engineer@gmail.com', 'blake@team4909.org'].includes(
@@ -59,9 +60,9 @@
 
 			<form class="d-flex">
 				{#if $page.data.session}
-					<a class="btn btn-info" on:click={signOut}>Sign Out</a>
+					<btn class="btn btn-info" use:click={() => signOut()}>Sign Out</btn>
 				{:else}
-					<a class="btn btn-primary" on:click={signIn}>Sign In</a>
+					<btn class="btn btn-primary" use:click={() => signIn()}>Sign In</btn>
 				{/if}
 			</form>
 		</div>

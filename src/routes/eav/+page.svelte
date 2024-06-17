@@ -6,6 +6,7 @@
 	import Card from './Card.svelte';
 	import FormControl from './FormControl.svelte';
 	import Select from 'svelte-select';
+	import { cardinalityOptions, typeOptions } from './eav';
 
 	export let data: PageData;
 	export const namespaceTypes = [
@@ -14,12 +15,6 @@
 	];
 
 	let selectedNsName: string | null = null;
-	const cardinalityOptions = [
-		{ value: '1', label: 'One' },
-		{ value: 'n', label: 'Many' }
-	];
-
-	const typeOptions = ['string', 'number', 'boolean'];
 </script>
 
 <h1>EAV Schema Creator</h1>
@@ -67,6 +62,7 @@
 			{#each Object.entries(data.namespaces[selectedNsName] || {}) as [attrName, attr] (attrName)}
 				<div>{attrName} - {JSON.stringify(attr)}</div>
 			{/each} -->
+				<a href="eav/{selectedNsName}" class="btn btn-primary">Add Data</a>
 			{/if}
 		</Card>
 		{#if selectedNsName}

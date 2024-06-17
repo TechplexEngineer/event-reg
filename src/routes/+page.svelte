@@ -1,12 +1,7 @@
 <script lang="ts">
-	let events = [
-		{
-			name: 'New England Robotics Derby',
-			dateStr: 'October 12, 2024',
-			eventSlug: 'nerd24', // often the same as eventCode but can be entered before the eventCode is assgined
-			program: 'FRC'
-		}
-	];
+	import type { PageData } from './$types';
+
+	export let data: PageData;
 </script>
 
 <svelte:head>
@@ -18,7 +13,7 @@
 	<h1 class="mb-4">Welcome to Event Registration</h1>
 
 	<h3>Upcomming Events</h3>
-	{#each events as event}
+	{#each data.events as event}
 		<div class="card">
 			<div class="card-body">
 				<h5 class="card-title">{event.name}</h5>

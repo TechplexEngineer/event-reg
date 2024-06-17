@@ -1,20 +1,12 @@
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
+import { addAttribute, addNamespace, getNamespaces } from './eav.server';
 
-const namespaces: Record<string, Record<string, {
-    comment?: string,
-    cardinality: string,
-    type: string
-}>> = {
-    "Event": {
-        "name": { type: "string", cardinality: "1" },
-        "date": { type: "string", cardinality: "1" }
-    }
-}
+
 
 export const load = (async () => {
     return {
-        namespaces: namespaces,
+        namespaces: getNamespaces(),
     };
 }) satisfies PageServerLoad;
 
@@ -24,17 +16,18 @@ export const actions = {
     // },
     addNamespace: async ({ request }) => {
         const fd = await request.formData();
-        console.log("addNamespace action", fd);
+
         let name = fd.get('name')?.toString();
         //@todo validate name
         if (name) {
-            namespaces[name] = {};
+            addNamespace(name);
         }
     },
 
     addAttribute: async ({ request }) => {
         const fd = await request.formData();
-        console.log("addAttribute action", fd);
+
+        //@todo validate inputs
         let namespace = fd.get('namespace')?.toString();
         if (!namespace) {
             return fail(400, { message: "namespace is required" });
@@ -46,14 +39,11 @@ export const actions = {
         let comment = fd.get('comment')?.toString() || "";
         let cardinality = JSON.parse(fd.get('cardinality')?.toString() || "").value;
         let type = JSON.parse(fd.get('type')?.toString() || "").value;
-        namespaces[namespace][name] = {
+
+        addAttribute(namespace, name, {
             comment,
             cardinality,
-            type,
-        }
-        // //@todo validate inputs
-        // if (name) {
-        //     namespaces.push({ name: name });
-        // }
+            type
+        });
     }
 } satisfies Actions;
