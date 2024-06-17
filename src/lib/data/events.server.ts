@@ -2,7 +2,22 @@
 const events = [
     {
         name: 'New England Robotics Derby',
-        dateStr: 'October 12, 2024',
+        date: Date.parse('October 12, 2023'),
+        location: 'Tewksbury Memorial High School, 32 River Street, Billerica, MA',
+
+        // slug cannot be "new" because we use that as the route for a new event
+        eventSlug: 'nerd23', // often the same as eventCode but can be entered before the eventCode is assgined
+        program: 'FRC',
+        message: `Hello Teams!    
+We are looking forward to hosting the 3rd annual NERD!    
+Be sure to pay by the deadline as we have teams on the waitlist!`,
+        contactEmail: 'blake@team4909.org',
+        eventWebsite: 'https://www.newenglandroboticsderby.com/',
+        teamLimit: 32
+    },
+    {
+        name: 'New England Robotics Derby',
+        date: Date.parse('October 12, 2024'),
         location: 'Billerica Memorial High School, 32 River Street, Billerica, MA',
 
         // slug cannot be "new" because we use that as the route for a new event
@@ -45,4 +60,12 @@ export const getTeamsByEventSlug = async (slug: string) => {
     }
 
     return [];
+}
+
+export const getUpcommingEvents = (numEvents: number) => {
+    return events.filter(event => event.date > Date.now());
+}
+
+export const getPastEvents = (numEvents: number) => {
+    return events.filter(event => event.date <= Date.now());
 }
