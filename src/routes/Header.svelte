@@ -46,14 +46,14 @@
 					<a
 						class="nav-link {$page.url.pathname === '/' ? 'active' : ''}"
 						aria-current="page"
-						href="/">Admin</a
+						href="/admin">Admin</a
 					>
 				</li>
 				<li class="nav-item">
 					<a
 						class="nav-link {$page.url.pathname === '/' ? 'active' : ''}"
 						aria-current="page"
-						href="/">Dashboard</a
+						href="/dashboard">Dashboard</a
 					>
 				</li>
 			</ul>

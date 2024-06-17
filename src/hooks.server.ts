@@ -1,7 +1,7 @@
 import { sequence } from "@sveltejs/kit/hooks";
 import { handle as handleAuth } from "./auth"
 import type { Handle } from "@sveltejs/kit";
-import { getdb } from "$lib/getdb.server";
+import { getdb } from "$lib/data/getdb.server";
 
 
 const injectDb = (async ({ event, resolve }) => {

@@ -6,8 +6,6 @@
 	import FormForNamespace from './FormForNamespace.svelte';
 
 	export let data: PageData;
-
-	console.log(data.data);
 </script>
 
 <div class="row">

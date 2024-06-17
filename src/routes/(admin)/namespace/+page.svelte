@@ -50,7 +50,7 @@
 		</Card>
 	</div>
 	<div class="col">
-		<Card title={`Attributes of Namespace: ${selectedNsName || 'None Selected'}`} class="mt-2">
+		<Card title={`Attributes of Namespace: ${selectedNsName || 'None Selected'}`}>
 			{#if selectedNsName}
 				<TableForObjectArray
 					data={Object.entries(data.namespaces[selectedNsName]).map(([attrName, attrProps]) => ({
@@ -58,11 +58,7 @@
 						...attrProps
 					}))}
 				/>
-				<!--
-			{#each Object.entries(data.namespaces[selectedNsName] || {}) as [attrName, attr] (attrName)}
-				<div>{attrName} - {JSON.stringify(attr)}</div>
-			{/each} -->
-				<a href="eav/{selectedNsName}" class="btn btn-primary">Add Data</a>
+				<a href="eav/{selectedNsName}" class="btn btn-primary">Manage Data</a>
 			{/if}
 		</Card>
 		{#if selectedNsName}
@@ -95,10 +91,13 @@
 	.clickable {
 		cursor: pointer;
 		padding: 5px 8px;
+		border-radius: 5px;
+		border: 1px solid #ccc;
 	}
 	.active {
 		font-style: italic;
 		text-decoration: underline;
 		background-color: #ccc;
+		border-radius: 5px;
 	}
 </style>

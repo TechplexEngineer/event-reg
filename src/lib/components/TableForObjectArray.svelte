@@ -1,11 +1,11 @@
 <script context="module" lang="ts">
-	export type tableColumns = (string | { data: string; title: string; render?: renderFn })[];
+	export type TableColumns = (string | { data: string; title: string; render?: renderFn })[];
 	export type renderFn = (val: any, type: any, row: any) => string;
 </script>
 
 <script lang="ts">
-	export let data: Record<string, string>[];
-	export let columns: tableColumns = Object.keys(data[0] || { 'No Data': '' });
+	export let data: Record<string, string | number>[];
+	export let columns: TableColumns = Object.keys(data[0] || { 'No Data': '' });
 	const cols2Render = columns.map((k) => {
 		if (typeof k === 'string') {
 			return {
