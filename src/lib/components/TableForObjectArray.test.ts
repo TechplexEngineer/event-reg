@@ -3,7 +3,7 @@ import {
     render,
     screen
 } from '@testing-library/svelte';
-import TableForObjectArray from './TableForObjectArray.svelte';
+import TableForObjectArray, { type TableColumns } from './TableForObjectArray.svelte';
 
 const sampleData = [
     { name: 'Alice', age: "25" },
@@ -103,4 +103,13 @@ describe('TableForObjectArray', () => {
         // screen.debug();
         expect(document.querySelector("tbody tr td")?.textContent).toBe(sampleData[0].name)
     });
+
+    it('supports alternate render funcion renderHTML which renders the passed string as html', () => {
+        const columns: TableColumns = [
+            { data: 'name', title: 'Age', renderHTML: (val) => `<strong>${val}</strong>` },
+        ];
+        render(TableForObjectArray, { data: sampleData, columns: columns });
+        screen.debug();
+        expect(document.querySelector("tbody tr td strong")?.textContent).toBe(sampleData[0].name)
+    })
 });

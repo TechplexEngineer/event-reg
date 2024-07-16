@@ -1,5 +1,8 @@
 <script context="module" lang="ts">
-	export type TableColumns = (string | { data: string; title: string; render?: renderFn })[];
+	export type TableColumns = (
+		| string
+		| { data: string; title: string; render?: renderFn; renderHTML?: renderFn }
+	)[];
 	export type renderFn = (val: any, type: any, row: any) => string;
 </script>
 
@@ -31,6 +34,8 @@
 				{#each cols2Render as colCfg}
 					{#if colCfg.render}
 						<td>{colCfg.render(row[colCfg.data], null, row)}</td>
+					{:else if colCfg.renderHTML}
+						<td>{@html colCfg.renderHTML(row[colCfg.data], null, row)}</td>
 					{:else}
 						<td>{row[colCfg.data]}</td>
 					{/if}

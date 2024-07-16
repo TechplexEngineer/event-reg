@@ -25,6 +25,8 @@
 		"@testing-library/svelte": "^5.1.0",
 		"@testing-library/user-event": "^14.5.2",
 		"@types/eslint": "^8.56.0",
+		"@types/indefinite": "^2.3.4",
+		"@types/pluralize": "^0.0.33",
 		"@typescript-eslint/eslint-plugin": "^7.0.0",
 		"@typescript-eslint/parser": "^7.0.0",
 		"bootstrap": "^5.3.3",
@@ -53,6 +55,8 @@
 		"@miniflare/d1": "^2.14.2",
 		"better-sqlite3": "^11.0.0",
 		"drizzle-zod": "^0.5.1",
+		"indefinite": "^2.5.1",
+		"pluralize": "^8.0.0",
 		"simpl-schema": "^3.4.6",
 		"svelte-markdown": "^0.4.1",
 		"svelte-select": "^5.8.3"

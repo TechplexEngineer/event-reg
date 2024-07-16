@@ -1,6 +1,6 @@
 import { fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
-import { addAttribute, addNamespace, getNamespaces } from './eav.server';
+import { addAttribute, addNamespace, getNamespaces } from '$lib/data/eav.server';
 
 
 

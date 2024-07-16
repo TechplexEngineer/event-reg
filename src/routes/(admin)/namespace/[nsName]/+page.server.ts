@@ -1,4 +1,4 @@
-import { addNsData, getNamespace, getNamespaces, getNsData } from '../eav.server';
+import { addNsData, getNamespace, getNamespaces, getNsData } from '$lib/data/eav.server';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load = (async ({ params }) => {

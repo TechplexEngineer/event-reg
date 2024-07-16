@@ -7,7 +7,7 @@ describe('getEventBySlug', async (test) => {
     test('should return the correct event when the slug exists', () => {
         expect(event).toBeDefined();
         expect(event!.name).toBe('New England Robotics Derby');
-        expect(event!.dateStr).toBe('October 12, 2024');
+        expect(event!.date).toBe('October 12, 2024');
         expect(event!.eventSlug).toBe('nerd24');
         expect(event!.program).toBe('FRC');
     });

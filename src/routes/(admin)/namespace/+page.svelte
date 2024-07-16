@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import TableForObjectArray from '$lib/TableForObjectArray.svelte';
 	import { click } from '$lib/superform/onClickKeyPress.action';
 	import type { PageData } from './$types';
-	import Card from './Card.svelte';
-	import FormControl from './FormControl.svelte';
 	import Select from 'svelte-select';
-	import { cardinalityOptions, typeOptions } from './eav';
+	import { cardinalityOptions, typeOptions } from '$lib/data/eav';
+	import Card from '$lib/components/Card.svelte';
+	import FormControl from '$lib/components/FormControl.svelte';
+	import TableForObjectArray from '$lib/components/TableForObjectArray.svelte';
 
 	export let data: PageData;
 	export const namespaceTypes = [
@@ -58,7 +58,7 @@
 						...attrProps
 					}))}
 				/>
-				<a href="eav/{selectedNsName}" class="btn btn-primary">Manage Data</a>
+				<a href="namespace/{selectedNsName}" class="btn btn-primary">Manage Data</a>
 			{/if}
 		</Card>
 		{#if selectedNsName}

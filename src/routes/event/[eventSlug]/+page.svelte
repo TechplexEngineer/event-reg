@@ -1,9 +1,12 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import SvelteMarkdown from 'svelte-markdown';
-	import TableForObjectArray, { type tableColumns } from '$lib/TableForObjectArray.svelte';
+	import TableForObjectArray, {
+		type TableColumns
+	} from '$lib/components/TableForObjectArray.svelte';
+	import { formatUnix2Long } from '$lib/dateutil';
 
-	const columns: tableColumns = [
+	const columns: TableColumns = [
 		{
 			data: 'name',
 			title: 'Name'
@@ -48,7 +51,9 @@
 	</div>
 </div>
 
-<span id="date" class="ms-2 fst-italic text-muted">Date: {$page.data.event.dateStr}</span>
+<span id="date" class="ms-2 fst-italic text-muted"
+	>Date: {formatUnix2Long($page.data.event.date)}</span
+>
 <span id="location" class="ms-2 fst-italic text-muted">Location: {$page.data.event.location}</span>
 <!-- <span id="poc" class="ms-2 fst-italic text-muted">Contact: {$page.data.event.contactEmail}</span> -->
 <span id="eventWeb" class="ms-2 fst-italic text-muted"

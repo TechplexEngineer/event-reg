@@ -13,8 +13,8 @@
 		{
 			title: 'Actions',
 			data: 'name',
-			render: (val) => {
-				return `<a href="/admin/namespace/${val}" class="btn btn-primary">Edit</a>`;
+			renderHTML: (val) => {
+				return `<a href="/namespace/${val}" class="btn btn-primary">Edit</a>`;
 			}
 		}
 	];

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { formatUnix2Long } from '$lib/dateutil';
 	import type { PageData } from './$types';
 
 	export let data: PageData;
@@ -14,10 +15,10 @@
 
 	<h3>Upcomming Events</h3>
 	{#each data.events as event}
-		<div class="card">
+		<div class="card mt-4">
 			<div class="card-body">
 				<h5 class="card-title">{event.name}</h5>
-				<h6 class="card-subtitle mb-2 text-body-secondary">{event.dateStr}</h6>
+				<h6 class="card-subtitle mb-2 text-body-secondary">{formatUnix2Long(event.date)}</h6>
 				<!-- <p class="card-text">
 					Some quick example text to build on the card title and make up the bulk of the card's
 					content.

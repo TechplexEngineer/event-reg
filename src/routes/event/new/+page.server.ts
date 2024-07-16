@@ -3,15 +3,18 @@ import type { Actions, PageServerLoad } from './$types';
 import { fail, redirect } from "@sveltejs/kit";
 // import { eventInsertSchema } from "$lib/data/events.schema";
 import { zod } from 'sveltekit-superforms/adapters'
+import { getNamespace } from '$lib/data/eav.server';
 
 export const load = (async () => {
-
-    // Server API:
-    // const form = await superValidate(zod(eventInsertSchema));
-
-    // Always return { form } in load and form actions.
-    return {};
+    return {
+        namespace: getNamespace('Event')
+    };
 }) satisfies PageServerLoad;
+
+export const actions = {
+    default: async ({ request }) => {
+    }
+} satisfies Actions;
 
 // export const actions = {
 //     default: async ({ request }) => {

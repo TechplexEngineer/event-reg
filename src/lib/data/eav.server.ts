@@ -1,7 +1,10 @@
-import type { Attribute, AttributeName, Namespace, NamespaceName, Namespaces } from "./eav";
+import type { Attribute, AttributeName, Namespace, NamespaceName, Namespaces } from "$lib/data/eav";
 
 
 const namespaces: Namespaces = {
+    // "Namespace": {
+
+    // },
     "Event": {
         "name": { type: "string", cardinality: "1" },
         "date": { type: "string", cardinality: "1" }

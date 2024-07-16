@@ -25,6 +25,8 @@
 		| 'week'
 		| 'select'
 		| string; // allow other element types that we haven't explicitly added
+
+	export type Items = Readonly<({ value: string; label: string } | string)[]>;
 </script>
 
 <script lang="ts">
@@ -38,7 +40,7 @@
 		input?: string[];
 	} = {};
 	export let type: HTMLInputType = 'text';
-	export let items: ({ value: string; label: string } | string)[] = [];
+	export let items: Items = [];
 
 	export let required: boolean = false;
 

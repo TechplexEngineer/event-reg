@@ -1,4 +1,4 @@
-import { getNamespaces } from '../namespace/eav.server';
+import { getNamespaces } from '$lib/data/eav.server';
 import type { PageServerLoad } from './$types';
 
 export const load = (async () => {
