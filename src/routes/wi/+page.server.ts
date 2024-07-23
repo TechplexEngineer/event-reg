@@ -3,6 +3,7 @@ import type { PageServerLoad } from './$types';
 export const load = (async () => {
     return {
         title: 'Common Conveyor',
+        image: 'img.jpg',
         tools: [],
         parts: [],
         fixtures: [],
@@ -10,8 +11,13 @@ export const load = (async () => {
             {
                 stepNumber: 1,
                 description: "todo",
-                images: ""
-            }
+                images: "img.jpg"
+            },
+            {
+                stepNumber: 1,
+                description: "todo",
+                images: "img.jpg"
+            },
         ]
     };
 }) satisfies PageServerLoad;
