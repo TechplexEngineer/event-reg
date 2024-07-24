@@ -84,6 +84,10 @@
 	const eventNameChange = async (evt: any, id: any) => {
 		console.log('eventNameChange', evt, id);
 	};
+
+	const deleteEvent = (eventId: number) => {
+		db.events.delete(eventId);
+	}
 </script>
 
 <div class="container-fluid">
@@ -170,7 +174,7 @@
 										/>
 									</td>
 									<td>
-										<button class="btn btn-warning">Delete</button>
+										<button class="btn btn-warning" on:click={()=>deleteEvent(event.id)}>Delete</button>
 									</td>
 								</tr>
 							{/each}
