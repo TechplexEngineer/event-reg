@@ -1,8 +1,8 @@
 <script>
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
-	import '../app.scss';
-	import './styles.css';
+	// import '/app.scss';
+	// import '/styles.css';
 
 	onMount(async () => {
 		if (!browser) return;
