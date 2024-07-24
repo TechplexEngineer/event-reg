@@ -81,8 +81,9 @@
 		confirm('Are you sure you want to clear all events?') && db.events.clear();
 	};
 
-	const eventNameChange = async (evt: any, id: any) => {
-		console.log('eventNameChange', evt, id);
+	const eventNameChange = async (evt: any, eventId: any) => {
+		// console.log('eventNameChange', evt.target.value, eventId);
+		db.events.update(eventId, {name: evt.target.value})
 	};
 
 	const deleteEvent = (eventId: number) => {
@@ -170,7 +171,7 @@
 											type="text"
 											value={event.name}
 											class="form-control"
-											on:change={console.log}
+											on:change={(e)=>eventNameChange(e, event.id)}
 										/>
 									</td>
 									<td>
