@@ -7,6 +7,8 @@
 	let message = '';
 	import { db } from './events.db';
 
+	const defaultPlaybackRate = 1.5;
+
 	const playSelectedFile = function (files: FileList) {
 		if (!files || files.length == 0) return;
 
@@ -15,7 +17,7 @@
 			return;
 		}
 		const file = files[0];
-		console.log('file:', file);
+		// console.log('file:', file);
 
 		// const type = file.type;
 		// const canPlay = videoNode.canPlayType(type);
@@ -38,12 +40,14 @@
 
 		var fileURL = URL.createObjectURL(file);
 		videoNode.src = fileURL;
+		videoNode.playbackRate = defaultPlaybackRate;
 	};
 
 	const seek = (seconds: number) => {
 		videoNode.currentTime += seconds;
 	};
 
+	// when files changes, play the selected file
 	$: playSelectedFile(files);
 
 	const controls: number[] = [
@@ -71,15 +75,62 @@
 
 	// let events: any[] = [];
 	let inputEventName = '';
+	let playbackRate = defaultPlaybackRate;
+	// $: console.log('playbackRate:', playbackRate);
 
 	let events = liveQuery(() => db.events.toArray());
 
 	const eventStart = () => {
-		console.log('eventStart');
+		// if event timestamp aldrady exists, update it
+		// else, add new event
+		const time = videoNode.currentTime;
+		db.events
+			.where('startTime')
+			.equals(time)
+			.first((event) => {
+				if (event) {
+					db.events.update(event.id, { name: inputEventName });
+				} else {
+					db.events.add({ startTime: time, name: inputEventName });
+				}
+			});
+	};
 
-		db.events.add({ type: 'start', time: videoNode.currentTime, name: inputEventName });
+	const eventEnd = () => {
+		// 1. get most recent event with a start timestamp
+		// 2. if found, add an end timestamp
+		// 3. if not found, add event with end timestamp
+		// db.events.add({ endTime: videoNode.currentTime, name: inputEventName });
 
-		// events = [...events, { type: 'start', time: videoNode.currentTime, name: inputEventName }];
+		const time = videoNode.currentTime;
+
+		db.events
+			.where('startTime')
+			.below(time)
+			.reverse()
+			.first((event) => {
+				if (event) {
+					db.events.update(event.id, { endTime: time });
+				} else {
+					db.events.add({ endTime: time, name: inputEventName });
+				}
+			});
+	};
+
+	const clearDb = () => {
+		confirm('Are you sure you want to clear all events?') && db.events.clear();
+	};
+
+	const saveDb = async () => {
+		const events = await db.events.toArray();
+		// serialize events to json then offer to download file
+		const json = JSON.stringify(events ?? [], null, 2);
+		const blob = new Blob([json], { type: 'application/json' });
+		const url = URL.createObjectURL(blob);
+		const a = document.createElement('a');
+		a.href = url;
+		a.download = 'events.json';
+		a.click();
 	};
 
 	$: console.log('events:', events);
@@ -87,7 +138,7 @@
 
 <div class="container-fluid">
 	<div class="row vh-100">
-		<div class="col-md-9 p-2" style="border: 1px solid black">
+		<div class="col-md-7 p-2" style="border: 1px solid black">
 			<div>{message}</div>
 
 			<div style="height: 60vh" class="d-flex justify-content-center align-items-center">
@@ -97,6 +148,8 @@
 					controls
 					bind:this={videoNode}
 					style="height: 100%;"
+					muted
+					bind:playbackRate
 					class:d-none={!(files && files.length > 0)}
 				/>
 			</div>
@@ -122,7 +175,7 @@
 			<div style="height: 100%" class="d-flex flex-column align-items-start">
 				<div class="d-flex w-100">
 					<button class="btn btn-primary me-2 flex-fill" on:click={eventStart}>Event Start</button>
-					<button class="btn btn-primary flex-fill">Event Stop</button>
+					<button class="btn btn-primary flex-fill" on:click={eventEnd}>Event Stop</button>
 				</div>
 
 				<button class="btn btn-primary mt-2 w-100">Event Stop + Start New</button>
@@ -136,15 +189,55 @@
 
 				<!-- <hr /> -->
 				<h2 class="mt-2">Events</h2>
-				<ul>
-					{#if $events}
-						{#each $events as event}
-							<li>{JSON.stringify(event)}</li>
-						{/each}
-					{/if}
-				</ul>
+				{#if $events}
+					<table class="table">
+						<thead>
+							<tr>
+								<th>Start</th>
+								<th>End</th>
+								<th>Name</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							{#each $events as event (event.id)}
+								<tr>
+									<td
+										>{event.startTime ?? ''}
+										{#if typeof event.startTime != 'undefined'}
+											<button
+												class="btn btn-primary"
+												on:click={() => {
+													seek(event.startTime);
+												}}>Seek</button
+											>
+										{/if}
+									</td>
+									<td
+										>{event.endTime ?? ''}
+										{#if typeof event.endTime != 'undefined'}
+											<button
+												class="btn btn-primary"
+												on:click={() => {
+													seek(event.endTime);
+												}}>Seek</button
+											>
+										{/if}</td
+									>
+									<td><input type="text" value={event.name} class="form-control" /></td>
+									<td>
+										<button class="btn btn-warning">Delete</button>
+									</td>
+								</tr>
+							{/each}
+						</tbody>
+					</table>
+				{/if}
 
-				<button class="btn btn-primary w-100 mt-auto">Save</button>
+				<div class="d-flex w-100 mt-auto">
+					<button class="btn btn-primary me-2 flex-fill" on:click={saveDb}>Save</button>
+					<button class="btn btn-outline-danger flex-fill" on:click={clearDb}>Clear</button>
+				</div>
 			</div>
 		</div>
 	</div>
