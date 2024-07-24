@@ -5,7 +5,7 @@
 	let files: FileList;
 	let videoNode: HTMLVideoElement;
 	let message = '';
-	import { db } from './events.db';
+	import { db, type Event } from './events.db';
 
 	const defaultPlaybackRate = 1.5;
 
@@ -121,16 +121,72 @@
 		confirm('Are you sure you want to clear all events?') && db.events.clear();
 	};
 
-	const saveDb = async () => {
-		const events = await db.events.toArray();
-		// serialize events to json then offer to download file
-		const json = JSON.stringify(events ?? [], null, 2);
-		const blob = new Blob([json], { type: 'application/json' });
-		const url = URL.createObjectURL(blob);
+	const arrayToCsv = (data) => {
+		if (!data || !data.length) {
+			return '';
+		}
+
+		const headers = Object.keys(data[0]);
+		const csvRows = [];
+
+		// Add the headers to the first row
+		csvRows.push(headers.join(','));
+
+		// Map the data to rows
+		data.forEach((row) => {
+			const values = headers.map((header) => {
+				const escaped = ('' + row[header]).replace(/"/g, '\\"');
+				return `"${escaped}"`;
+			});
+			csvRows.push(values.join(','));
+		});
+
+		// Join rows with new lines
+		return csvRows.join('\n');
+	};
+
+	// const arrayToCsv = (events: Event[]): string => {
+
+	// 	for(const event of events) {
+
+	// 	}
+
+	// }
+
+	const arrayToJSON = (events: Event[]) => {
+		return JSON.stringify(events ?? [], null, 2);
+	};
+
+	const downloadData = (data: Blob, fileName: string) => {
+		const url = URL.createObjectURL(data);
 		const a = document.createElement('a');
 		a.href = url;
-		a.download = 'events.json';
+		a.download = fileName;
 		a.click();
+	};
+
+	const saveDbCSV = async () => {
+		const events = await db.events.toArray();
+		const fileName = files[0].name;
+
+		const csvData = arrayToCsv(events);
+		const blob = new Blob([csvData], { type: 'text/csv' });
+
+		downloadData(blob, `events-${fileName}.csv`);
+	};
+
+	const saveDbJSON = async () => {
+		const events = await db.events.toArray();
+		const fileName = files[0].name;
+
+		const jsonData = arrayToJSON(events);
+		const blob = new Blob([jsonData], { type: 'application/json' });
+
+		downloadData(blob, `events-${fileName}.json`);
+	};
+
+	const eventNameChange = async (evt, id) => {
+		console.log('eventNameChange', evt, id);
 	};
 
 	$: console.log('events:', events);
@@ -162,6 +218,7 @@
 						>
 					{/each}
 				</div>
+				<h3>{(files && files[0].name) ?? ''}</h3>
 				<div class="btn-group" role="group">
 					{#each controls.filter((c) => c > 0) as control}
 						<button type="button" class="btn btn-outline-secondary" on:click={() => seek(control)}
@@ -178,7 +235,7 @@
 					<button class="btn btn-primary flex-fill" on:click={eventEnd}>Event Stop</button>
 				</div>
 
-				<button class="btn btn-primary mt-2 w-100">Event Stop + Start New</button>
+				<!-- <button class="btn btn-primary mt-2 w-100">Event Stop + Start New</button> -->
 
 				<input
 					type="text"
@@ -203,7 +260,7 @@
 							{#each $events as event (event.id)}
 								<tr>
 									<td
-										>{event.startTime ?? ''}
+										>{formatControl(event.startTime)}
 										{#if typeof event.startTime != 'undefined'}
 											<button
 												class="btn btn-primary"
@@ -224,7 +281,14 @@
 											>
 										{/if}</td
 									>
-									<td><input type="text" value={event.name} class="form-control" /></td>
+									<td>
+										<input
+											type="text"
+											value={event.name}
+											class="form-control"
+											on:change={(e) => eventNameChange(e, event.id)}
+										/>
+									</td>
 									<td>
 										<button class="btn btn-warning">Delete</button>
 									</td>
@@ -235,7 +299,8 @@
 				{/if}
 
 				<div class="d-flex w-100 mt-auto">
-					<button class="btn btn-primary me-2 flex-fill" on:click={saveDb}>Save</button>
+					<button class="btn btn-primary me-2 flex-fill" on:click={saveDbJSON}>Save JSON</button>
+					<button class="btn btn-primary me-2 flex-fill" on:click={saveDbCSV}>Save CSV</button>
 					<button class="btn btn-outline-danger flex-fill" on:click={clearDb}>Clear</button>
 				</div>
 			</div>
