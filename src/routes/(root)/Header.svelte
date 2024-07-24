@@ -1,16 +1,20 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { click } from '$lib/superform/onClickKeyPress.action';
-	import { signIn, signOut } from '@auth/sveltekit/client';
 
-	let isAdmin = ['techplex.engineer@gmail.com', 'blake@team4909.org'].includes(
-		$page.data.session?.user?.email || ''
-	);
+	const links = [
+		{
+			name: "Home",
+			path: "/"
+		},{
+			name: "Video",
+			path: "/video"
+		}
+	]
 </script>
 
 <nav class="navbar navbar-expand-lg bg-dark border-bottom border-body" data-bs-theme="dark">
 	<div class="container-fluid">
-		<a class="navbar-brand" href="/">Event Registration</a>
+		<a class="navbar-brand" href="/" title="Amazon Robotics Process Engineer Tools">AR PE Tools</a>
 		<button
 			class="navbar-toggler"
 			type="button"
@@ -24,47 +28,16 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarColor01">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-				<li class="nav-item">
-					<a
-						class="nav-link {$page.url.pathname === '/' ? 'active' : ''}"
-						aria-current="page"
-						href="/">Home</a
-					>
-				</li>
-				<!-- <li class="nav-item">
-					<a class="nav-link" href="#">Features</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">Pricing</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link" href="#">About</a>
-				</li> -->
+				{#each links as link (link.name)}
+					<li class="nav-item">
+						<a
+							class="nav-link {$page.url.pathname === link.path ? 'active' : ''}"
+							aria-current="page"
+							href={link.path}>{link.name}</a
+						>
+					</li>
+				{/each}
 			</ul>
-			<ul class="navbar-nav mb-2 mb-lg-0">
-				<li class="nav-item">
-					<a
-						class="nav-link {$page.url.pathname === '/' ? 'active' : ''}"
-						aria-current="page"
-						href="/admin">Admin</a
-					>
-				</li>
-				<li class="nav-item">
-					<a
-						class="nav-link {$page.url.pathname === '/' ? 'active' : ''}"
-						aria-current="page"
-						href="/dashboard">Dashboard</a
-					>
-				</li>
-			</ul>
-
-			<form class="d-flex">
-				{#if $page.data.session}
-					<btn class="btn btn-info" use:click={() => signOut()}>Sign Out</btn>
-				{:else}
-					<btn class="btn btn-primary" use:click={() => signIn()}>Sign In</btn>
-				{/if}
-			</form>
 		</div>
 	</div>
 </nav>

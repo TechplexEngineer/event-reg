@@ -1,11 +1,13 @@
 <script lang="ts">
 	import { liveQuery } from 'dexie';
-	import FF from './FF.svelte';
-	import RW from './RW.svelte';
+	
 	let files: FileList;
 	let videoNode: HTMLVideoElement;
 	let message = '';
-	import { db, type Event } from './events.db';
+	import { db, type VideoEvent } from './events.db';
+	import { saveDbCSV, saveDbJSON } from './download';
+	import { formatControl, formatTime } from './format';
+	import SeekBar from './SeekBar.svelte';
 
 	const defaultPlaybackRate = 1.5;
 
@@ -17,66 +19,24 @@
 			return;
 		}
 		const file = files[0];
-		// console.log('file:', file);
-
-		// const type = file.type;
-		// const canPlay = videoNode.canPlayType(type);
-
-		// console.log('canPlay:', file);
-
-		// switch (canPlay) {
-		// 	case 'maybe':
-		// 		message = 'Your browser thinks it can play this type of file, but is not sure.';
-		// 		break;
-		// 	case 'probably':
-		// 		message = 'Your browser thinks it can play this type of file.';
-		// 		break;
-		// 	case '':
-		// 		message = 'Your browser does not think it can play this type of file.';
-		// 		return; // bail
-		// }
-
-		// console.log('message:', message);
 
 		var fileURL = URL.createObjectURL(file);
 		videoNode.src = fileURL;
 		videoNode.playbackRate = defaultPlaybackRate;
 	};
 
-	const seek = (seconds: number) => {
+	const seek = (seconds: number | undefined) => {
+		if (typeof seconds == "undefined") return;
 		videoNode.currentTime += seconds;
 	};
 
 	// when files changes, play the selected file
 	$: playSelectedFile(files);
 
-	const controls: number[] = [
-		-5 * 60,
-		-2 * 60,
-		-1 * 60,
-		-20,
-		-10,
-		-5,
-		5,
-		10,
-		20,
-		1 * 60,
-		2 * 60,
-		5 * 60
-	];
+	
 
-	const formatControl = (amt: number) => {
-		const absAmt = Math.abs(amt);
-		const minutes = Math.floor(absAmt / 60);
-		const remainingSeconds = absAmt % 60;
-		const formattedSeconds = remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds;
-		return `${minutes}:${formattedSeconds}`;
-	};
-
-	// let events: any[] = [];
 	let inputEventName = '';
 	let playbackRate = defaultPlaybackRate;
-	// $: console.log('playbackRate:', playbackRate);
 
 	let events = liveQuery(() => db.events.toArray());
 
@@ -121,75 +81,9 @@
 		confirm('Are you sure you want to clear all events?') && db.events.clear();
 	};
 
-	const arrayToCsv = (data) => {
-		if (!data || !data.length) {
-			return '';
-		}
-
-		const headers = Object.keys(data[0]);
-		const csvRows = [];
-
-		// Add the headers to the first row
-		csvRows.push(headers.join(','));
-
-		// Map the data to rows
-		data.forEach((row) => {
-			const values = headers.map((header) => {
-				const escaped = ('' + row[header]).replace(/"/g, '\\"');
-				return `"${escaped}"`;
-			});
-			csvRows.push(values.join(','));
-		});
-
-		// Join rows with new lines
-		return csvRows.join('\n');
-	};
-
-	// const arrayToCsv = (events: Event[]): string => {
-
-	// 	for(const event of events) {
-
-	// 	}
-
-	// }
-
-	const arrayToJSON = (events: Event[]) => {
-		return JSON.stringify(events ?? [], null, 2);
-	};
-
-	const downloadData = (data: Blob, fileName: string) => {
-		const url = URL.createObjectURL(data);
-		const a = document.createElement('a');
-		a.href = url;
-		a.download = fileName;
-		a.click();
-	};
-
-	const saveDbCSV = async () => {
-		const events = await db.events.toArray();
-		const fileName = files[0].name;
-
-		const csvData = arrayToCsv(events);
-		const blob = new Blob([csvData], { type: 'text/csv' });
-
-		downloadData(blob, `events-${fileName}.csv`);
-	};
-
-	const saveDbJSON = async () => {
-		const events = await db.events.toArray();
-		const fileName = files[0].name;
-
-		const jsonData = arrayToJSON(events);
-		const blob = new Blob([jsonData], { type: 'application/json' });
-
-		downloadData(blob, `events-${fileName}.json`);
-	};
-
-	const eventNameChange = async (evt, id) => {
+	const eventNameChange = async (evt: any, id: any) => {
 		console.log('eventNameChange', evt, id);
 	};
-
-	$: console.log('events:', events);
 </script>
 
 <div class="container-fluid">
@@ -210,23 +104,9 @@
 				/>
 			</div>
 
-			<div class="d-flex justify-content-between mt-4">
-				<div class="btn-group" role="group">
-					{#each controls.filter((c) => c < 0) as control}
-						<button type="button" class="btn btn-outline-secondary" on:click={() => seek(control)}
-							><RW /> {formatControl(control)}</button
-						>
-					{/each}
-				</div>
-				<h3>{(files && files[0].name) ?? ''}</h3>
-				<div class="btn-group" role="group">
-					{#each controls.filter((c) => c > 0) as control}
-						<button type="button" class="btn btn-outline-secondary" on:click={() => seek(control)}
-							>{formatControl(control)} <FF /></button
-						>
-					{/each}
-				</div>
-			</div>
+			<SeekBar fileName={(files && files[0].name) ?? ''} {seek}/>
+
+			
 		</div>
 		<div class="col p-2" style="border: 1px solid black">
 			<div style="height: 100%" class="d-flex flex-column align-items-start">
@@ -260,7 +140,7 @@
 							{#each $events as event (event.id)}
 								<tr>
 									<td
-										>{formatControl(event.startTime)}
+										>{formatTime(event.startTime)}
 										{#if typeof event.startTime != 'undefined'}
 											<button
 												class="btn btn-primary"
@@ -271,7 +151,7 @@
 										{/if}
 									</td>
 									<td
-										>{event.endTime ?? ''}
+										>{formatTime(event.endTime)}
 										{#if typeof event.endTime != 'undefined'}
 											<button
 												class="btn btn-primary"
@@ -286,7 +166,7 @@
 											type="text"
 											value={event.name}
 											class="form-control"
-											on:change={(e) => eventNameChange(e, event.id)}
+											on:change={console.log}
 										/>
 									</td>
 									<td>
@@ -299,8 +179,8 @@
 				{/if}
 
 				<div class="d-flex w-100 mt-auto">
-					<button class="btn btn-primary me-2 flex-fill" on:click={saveDbJSON}>Save JSON</button>
-					<button class="btn btn-primary me-2 flex-fill" on:click={saveDbCSV}>Save CSV</button>
+					<button class="btn btn-primary me-2 flex-fill" on:click={async()=>saveDbJSON(await db.events.toArray(), files[0].name)}>Save JSON</button>
+					<button class="btn btn-primary me-2 flex-fill" on:click={async()=>saveDbCSV(await db.events.toArray(), files[0].name)}>Save CSV</button>
 					<button class="btn btn-outline-danger flex-fill" on:click={clearDb}>Clear</button>
 				</div>
 			</div>

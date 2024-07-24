@@ -1,6 +1,6 @@
 import Dexie, { type EntityTable } from 'dexie';
 
-interface Event {
+interface VideoEvent {
     id: number;
     startTime?: number,
     endTime?: number,
@@ -10,7 +10,7 @@ interface Event {
 
 const db = new Dexie('EventsDatabase') as Dexie & {
     events: EntityTable<
-        Event,
+    VideoEvent,
         'id' // primary key "id" (for the typings only)
     >;
 };
@@ -22,5 +22,5 @@ db.version(1).stores({
     events: '++id, startTime, endTime, name' // primary key "id" (for the runtime!)
 });
 
-export type { Event };
+export type { VideoEvent };
 export { db };
